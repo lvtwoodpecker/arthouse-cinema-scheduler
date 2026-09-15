@@ -1,0 +1,22 @@
+# Secrets — never commit
+google-oauth.keys.json
+
+# Personal data
+letterboxd-export/
+watchlist.csv
+watchlist_titles.json
+
+# Pipeline runtime output / cache (regenerated on each run)
+cache/
+screenings.json
+matches.json
+events_to_create.json
+2026-W11/
+
+# Python
+__pycache__/
+*.pyc
+
+# OS / editor
+.DS_Store
+.claude/
