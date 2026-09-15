@@ -51,12 +51,13 @@ def main():
     scraper_args = ["--force"] if args.force else []
     watchlist_args = ["--confirm"] if args.confirm else []
     city_args = ["--city", args.city]
+    scrape_city_args = list(city_args)
     if args.city == "nyc":
-        city_args += ["--days", str(args.days)]
+        scrape_city_args += ["--days", str(args.days)]
 
     print(f"=== Arthouse Cinema Watchlist Scheduler [{args.city.upper()}] ===")
     run("01_check_watchlist.py", watchlist_args)
-    run("02_scrape_cinemas.py", scraper_args + city_args)
+    run("02_scrape_cinemas.py", scraper_args + scrape_city_args)
     run("03_match.py")
     if args.city == "nyc":
         run("03b_verify_times.py")

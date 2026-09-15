@@ -161,15 +161,22 @@ def main():
                     entry = dict(candidate)  # copy base fields (liked_qa, watched, etc.)
                     entry["venue"] = venue_name
                     entry["date"] = hit["date"]
-                    entry["time"] = hit["time"]
+                    # A source hit with no time isn't actually a verification — fall
+                    # back to the Screenslate time rather than overwriting it blank.
+                    if hit["time"]:
+                        entry["time"] = hit["time"]
+                        entry["time_verified"] = True
+                    else:
+                        entry["time"] = candidate.get("time", "")
+                        entry["time_verified"] = False
                     entry["url"] = hit["url"] or candidate.get("url", "")
                     entry["qa"] = hit["qa"] or candidate.get("qa", False)
                     entry["notes"] = hit["notes"] or candidate.get("notes", "")
-                    entry["time_verified"] = True
                     entry.pop("_internal_venue", None)
                     entry.pop("_idx", None)
                     verified.append(entry)
-                print(f"    {film_name} @ {venue_name}: {len(source_hits)} source showtime(s) ✓")
+                verified_count = sum(1 for h in source_hits if h["time"])
+                print(f"    {film_name} @ {venue_name}: {len(source_hits)} source showtime(s), {verified_count} with a time ✓")
             else:
                 # Film not found on source — keep Screenslate entry, flag as unverified
                 entry = dict(candidate)
